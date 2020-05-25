@@ -16,21 +16,19 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //Creo una lista falsa de Lugares de terremotos
-        ArrayList<String> earthquakes = new ArrayList<>();
-        earthquakes.add("San Francisco");
-        earthquakes.add("London");
-        earthquakes.add("Tokyo");
-        earthquakes.add("Mexico City");
-        earthquakes.add("Moscow");
-        earthquakes.add("Rio de Janeiro");
-        earthquakes.add("Paris");
+        ArrayList<Terrremoto> terremotos = new ArrayList<>();
+        terremotos.add(new Terrremoto("8.5", "San Francisco", "Feb 2 2016"));
+        terremotos.add(new Terrremoto("5.5", "Londres", "May 2 2016"));
+        terremotos.add(new Terrremoto("6.5", "Tokio", "Oct 2 2016"));
+        terremotos.add(new Terrremoto("7.5", "Madrid", "Dec 2 2018"));
+        terremotos.add(new Terrremoto("7.0", "Mexico City", "Ocy 2 2017"));
+
 
         // Encuentro la referencia de lista en el Layout
         ListView earthquakeListView =  findViewById(R.id.lista);
 
         // Creo un ArrayAdapter de terremotos
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-                this, android.R.layout.simple_list_item_1, earthquakes);
+        TerremotoAdapter adapter = new TerremotoAdapter(this, terremotos);
 
         // Seteo el adaptador
                earthquakeListView.setAdapter(adapter);

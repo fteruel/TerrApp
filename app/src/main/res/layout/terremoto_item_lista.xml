@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Agrego Tools para poder incluir datos que solo van a aparecer en la preview-->
+<LinearLayout
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+
+ <!--Los elementos tools:text solo aparecen en preview-->
+ <TextView
+     android:layout_width="0dp"
+     android:layout_height="wrap_content"
+     android:layout_weight="1"
+     android:id="@+id/magnitudTV"
+     tools:text="8.2"/>
+
+    <TextView
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:id="@+id/lugarTV"
+    tools:text="San Francisco"/>
+
+    <TextView
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:id="@+id/fechaTV"
+    tools:text="Feb 2 2016"/>
+
+
+</LinearLayout>
