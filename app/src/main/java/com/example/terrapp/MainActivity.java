@@ -6,6 +6,10 @@ import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -31,6 +35,45 @@ public class MainActivity extends AppCompatActivity {
         TerremotoAdapter adapter = new TerremotoAdapter(this, terremotos);
 
         // Seteo el adaptador
-               earthquakeListView.setAdapter(adapter);
+        earthquakeListView.setAdapter(adapter);
+
+        try {
+            caramelos();
+        } catch (JSONException e) {
+            e.printStackTrace();
+    }
+
+
+    }
+
+    private void caramelos() throws JSONException {
+        //estamos parceando este Json:
+
+/*        {
+            "caramelos":[
+            {
+                "nombre": "tita",
+                "cantidad ": 10
+            }
+
+            ]
+        }
+        */
+
+
+        String caramelosJson = "{\"caramelos\":[{\"nombre\": \"Tita\", \"cantidad\":10}]}";
+
+        JSONObject carameloRoot = new JSONObject(caramelosJson);
+
+        JSONArray carameloArray = carameloRoot.getJSONArray("caramelos");
+
+        JSONObject primerCaramelo = carameloArray.getJSONObject(0);
+
+        String nombre = primerCaramelo.getString("nombre");
+        int cantidad = primerCaramelo.getInt("cantidad");
+
+
+
+
     }
 }
