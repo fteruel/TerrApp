@@ -47,6 +47,23 @@ public final class QueryUtils {
 
             // TODO: Parsear el JSON de ejemplo provisto para devolver una lista de terremotos
 
+            JSONObject terremotosJSON = new JSONObject(SAMPLE_JSON_RESPONSE);
+            JSONArray terremotoArray = terremotosJSON.getJSONArray("features");
+
+            for (int i =0 ; i< terremotoArray.length(); i++){
+                JSONObject terremotoActual = terremotoArray.getJSONObject(i);
+                JSONObject propiedades = terremotoActual.getJSONObject("properties");
+
+
+                String magnitud = propiedades.getString("mag");
+                String lugar = propiedades.getString("place");
+                String fecha = propiedades.getString("time");
+
+                Terrremoto terremotoNuevo = new Terrremoto(magnitud,lugar,fecha);
+
+
+            }
+
 
         } catch (JSONException e) {
             Log.e("QueryUtils", "Problema parseando JSON", e);
