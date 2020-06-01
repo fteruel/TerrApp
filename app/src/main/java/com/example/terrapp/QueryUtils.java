@@ -6,7 +6,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Metodo auxiliar para poder parsear las entradas de https://earthquake.usgs.gov/
@@ -38,28 +40,38 @@ public final class QueryUtils {
     public static ArrayList<Terrremoto> extractTerremotos() {
 
         // Empiezo con una lista auxiliar vacia
-        ArrayList<Terrremoto> earthquakes = new ArrayList<>();
+        ArrayList<Terrremoto> terremotos = new ArrayList<>();
+
+        //creo un formato de fecha a mostrar
+
+        SimpleDateFormat formatoDeFecha = new SimpleDateFormat("DD MMM, yyyy");
 
         // Try (intento) parcear el JSON de ejemplo, si hay algun problema
         // en el parsear tengo que generar un error y devolver un estado del sistema en ese momento.
 
         try {
 
-            // TODO: Parsear el JSON de ejemplo provisto para devolver una lista de terremotos
-
             JSONObject terremotosJSON = new JSONObject(SAMPLE_JSON_RESPONSE);
             JSONArray terremotoArray = terremotosJSON.getJSONArray("features");
 
-            for (int i =0 ; i< terremotoArray.length(); i++){
+            for (int i =0 ; i < terremotoArray.length(); i++){
                 JSONObject terremotoActual = terremotoArray.getJSONObject(i);
                 JSONObject propiedades = terremotoActual.getJSONObject("properties");
 
 
                 String magnitud = propiedades.getString("mag");
                 String lugar = propiedades.getString("place");
-                String fecha = propiedades.getString("time");
+                Long fecha = propiedades.getLong("time");
 
-                Terrremoto terremotoNuevo = new Terrremoto(magnitud,lugar,fecha);
+                //combertir formato de fecha
+
+                Date dateObj = new Date(fecha);
+
+                String fechaAMostrar = formatoDeFecha.format(dateObj);
+
+                Terrremoto terremotoNuevo = new Terrremoto(magnitud, lugar, fechaAMostrar);
+
+                terremotos.add(terremotoNuevo);
 
 
             }
@@ -70,7 +82,7 @@ public final class QueryUtils {
         }
 
         //devuelvo lista de terremotos
-        return earthquakes;
+        return terremotos;
     }
 
 }

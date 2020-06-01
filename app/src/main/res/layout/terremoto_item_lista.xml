@@ -18,18 +18,32 @@
      tools:text="8.2"/>
 
     <TextView
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:layout_weight="1"
-    android:id="@+id/lugarTV"
-    tools:text="San Francisco"/>
+        android:id="@+id/distanciaLugarTV"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        tools:text="30km S of" />
 
     <TextView
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:layout_weight="1"
-    android:id="@+id/fechaTV"
-    tools:text="Feb 2 2016"/>
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:id="@+id/lugarTV"
+        tools:text="San Francisco"/>
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:id="@+id/fechaTV"
+        tools:text="Feb 2 2016"/>
+
+    <TextView
+        android:id="@+id/horaTV"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        tools:text="3:00 PM" />
 
 
 </LinearLayout>
