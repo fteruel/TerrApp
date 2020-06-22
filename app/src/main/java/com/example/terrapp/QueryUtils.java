@@ -59,17 +59,16 @@ public final class QueryUtils {
                 JSONObject propiedades = terremotoActual.getJSONObject("properties");
 
 
-                String magnitud = propiedades.getString("mag");
+                Double magnitud = propiedades.getDouble("mag");
                 String lugar = propiedades.getString("place");
                 Long fecha = propiedades.getLong("time");
+                String URL = propiedades.getString("url");
 
-                //combertir formato de fecha
 
-                Date dateObj = new Date(fecha);
 
-                String fechaAMostrar = formatoDeFecha.format(dateObj);
 
-                Terrremoto terremotoNuevo = new Terrremoto(magnitud, lugar, fechaAMostrar);
+
+                Terrremoto terremotoNuevo = new Terrremoto(magnitud, lugar, fecha, URL);
 
                 terremotos.add(terremotoNuevo);
 

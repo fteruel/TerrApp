@@ -2,17 +2,19 @@ package com.example.terrapp;
 
 public class Terrremoto {
 
-    private String mMagnitud;
+    private Double mMagnitud;
     private String mLugar;
-    private String mFecha;
+    private Long mTiempo;
+    private String mURL;
 
-    public Terrremoto(String Magnitud, String Lugar, String Fecha) {
+    public Terrremoto(Double Magnitud, String Lugar, Long mTiempo, String mURL) {
         this.mMagnitud = Magnitud;
         this.mLugar = Lugar;
-        this.mFecha = Fecha;
+        this.mTiempo = mTiempo;
+        this.mURL = mURL;
     }
 
-    public String getmMagnitud() {
+    public Double getmMagnitud() {
         return mMagnitud;
     }
 
@@ -20,7 +22,9 @@ public class Terrremoto {
         return mLugar;
     }
 
-    public String getmFecha() {
-        return mFecha;
+    public Long getmTiempo() {
+        return mTiempo;
     }
+
+    public String getmURL() {return mURL; }
 }

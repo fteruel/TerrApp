@@ -32,12 +32,15 @@
         <option value="layoutResourceFile" />
         <option value="layoutResourceFile_vertical" />
         <option value="Class" />
+        <option value="resourceFile" />
       </list>
     </option>
   </component>
   <component name="ProjectId" id="1ZdpHlwifdXKn6TwuB61DEV6X3h" />
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="DeviceAndSnapshotComboBoxAction.selectedDevice" value="192.168.192.101:5555" />
+    <property name="DeviceAndSnapshotComboBoxAction.selectionTime" value="2020-06-21T12:40:44.885Z" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../ud843_Soonami-solution" />
   </component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">

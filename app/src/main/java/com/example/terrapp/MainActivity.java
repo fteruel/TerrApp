@@ -2,7 +2,11 @@ package com.example.terrapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -39,48 +43,39 @@ public class MainActivity extends AppCompatActivity {
         ListView earthquakeListView =  findViewById(R.id.lista);
 
         // Creo un ArrayAdapter de terremotos
-        TerremotoAdapter adapter = new TerremotoAdapter(this, terremotos);
+        final TerremotoAdapter adapter = new TerremotoAdapter(this, terremotos);
 
         // Seteo el adaptador
         earthquakeListView.setAdapter(adapter);
 
-        try {
-            caramelos();
-        } catch (JSONException e) {
-            e.printStackTrace();
-    }
+
+        //Creo un intent para llamar la pagina almacenada en la URL en cada item apretado
 
 
-    }
+        earthquakeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                // Find the current earthquake that was clicked on
+                Terrremoto terremotoActual = adapter.getItem(position);
 
-    private void caramelos() throws JSONException {
-        //estamos parceando este Json:
+                // Convert the String URL into a URI object (to pass into the Intent constructor)
+                Uri earthquakeUri = Uri.parse(terremotoActual.getmURL());
 
-/*        {
-            "caramelos":[
-            {
-                "nombre": "tita",
-                "cantidad ": 10
+                // Create a new intent to view the earthquake URI
+                Intent websiteIntent = new Intent(Intent.ACTION_VIEW, earthquakeUri);
+
+                // Send the intent to launch a new activity
+                startActivity(websiteIntent);
             }
-
-            ]
-        }
-        */
-
-
-        String caramelosJson = "{\"caramelos\":[{\"nombre\": \"Tita\", \"cantidad\":10}]}";
-
-        JSONObject carameloRoot = new JSONObject(caramelosJson);
-
-        JSONArray carameloArray = carameloRoot.getJSONArray("caramelos");
-
-        JSONObject primerCaramelo = carameloArray.getJSONObject(0);
-
-        String nombre = primerCaramelo.getString("nombre");
-        int cantidad = primerCaramelo.getInt("cantidad");
+        });
 
 
 
 
     }
+
+
+
+
+
 }

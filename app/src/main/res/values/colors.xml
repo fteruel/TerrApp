@@ -3,4 +3,42 @@
     <color name="colorPrimary">#6200EE</color>
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
+
+
+    <!-- Color for an earthquake with magnitud 0 y 2 -->
+    <color name="magnitud1">#4A7BA7</color>
+
+    <!-- Color de circulo para magnitud entre 2 y 3 -->
+    <color name="magnitud2">#04B4B3</color>
+
+    <!-- Color de circulo para magnitud entre 3 y 4 -->
+    <color name="magnitud3">#10CAC9</color>
+
+    <!-- Color de circulo para magnitudes entre 4 y 5 -->
+    <color name="magnitud4">#F5A623</color>
+
+    <!-- Color de circulo para magnitudes entre 5 y 6 -->
+    <color name="magnitud5">#FF7D50</color>
+
+    <!-- Color de circulo para magnitudes entre 6 y 7 -->
+    <color name="magnitud6">#FC6644</color>
+
+    <!-- Color de circulo para magnitudes entre 7 y 8 -->
+    <color name="magnitud7">#E75F40</color>
+
+    <!-- Color de circulo para magnitudes entre 8 y 9 -->
+    <color name="magnitud8">#E13A20</color>
+
+    <!-- Color de circulo para magnitudes entre 9 y 10 -->
+    <color name="magnitud9">#D93218</color>
+
+    <!-- Color de circulo para magnitudes mayor a 10 -->
+    <color name="magnitud10plus">#C03823</color>
+
+
+    <!-- Color detalle terremoto en ItemLista -->
+    <color name="colorTextoDetalleTerremoto">#B4BAC0</color>
+
+    <!-- Color Principal terremoto en ItemLista-->
+    <color name="colorTextoLugarTerremoto">#2B3D4D</color>
 </resources>
