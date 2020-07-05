@@ -1,19 +1,31 @@
 package com.example.terrapp;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Metodo auxiliar para poder parsear las entradas de https://earthquake.usgs.gov/
  */
 public final class QueryUtils {
+
+    public static final String LOG_TAG = QueryUtils.class.getSimpleName();
 
     /** Ejemplo de un JSON */
     private static final String SAMPLE_JSON_RESPONSE = "{\"type\":\"FeatureCollection\",\"metadata\":{\"generated\":1462295443000,\"url\":\"http://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2016-01-01&endtime=2016-01-31&minmag=6&limit=10\",\"title\":\"USGS Earthquakes\",\"status\":200,\"api\":\"1.5.2\",\"limit\":10,\"offset\":1,\"count\":10},\"features\":[{\"type\":\"Feature\",\"properties\":{\"mag\":7.2,\"place\":\"88km N of Yelizovo, Russia\",\"time\":1454124312220,\"updated\":1460674294040,\"tz\":720,\"url\":\"http://earthquake.usgs.gov/earthquakes/eventpage/us20004vvx\",\"detail\":\"http://earthquake.usgs.gov/fdsnws/event/1/query?eventid=us20004vvx&format=geojson\",\"felt\":2,\"cdi\":3.4,\"mmi\":5.82,\"alert\":\"green\",\"status\":\"reviewed\",\"tsunami\":1,\"sig\":798,\"net\":\"us\",\"code\":\"20004vvx\",\"ids\":\",at00o1qxho,pt16030050,us20004vvx,gcmt20160130032510,\",\"sources\":\",at,pt,us,gcmt,\",\"types\":\",cap,dyfi,finite-fault,general-link,general-text,geoserve,impact-link,impact-text,losspager,moment-tensor,nearby-cities,origin,phase-data,shakemap,tectonic-summary,\",\"nst\":null,\"dmin\":0.958,\"rms\":1.19,\"gap\":17,\"magType\":\"mww\",\"type\":\"earthquake\",\"title\":\"M 7.2 - 88km N of Yelizovo, Russia\"},\"geometry\":{\"type\":\"Point\",\"coordinates\":[158.5463,53.9776,177]},\"id\":\"us20004vvx\"},\n" +
@@ -66,8 +78,6 @@ public final class QueryUtils {
 
 
 
-
-
                 Terrremoto terremotoNuevo = new Terrremoto(magnitud, lugar, fecha, URL);
 
                 terremotos.add(terremotoNuevo);
@@ -83,5 +93,128 @@ public final class QueryUtils {
         //devuelvo lista de terremotos
         return terremotos;
     }
+
+    public static List<Terrremoto> traerDataDeTerremoto(String requestURL){
+        URL url = crearURL(requestURL);
+
+        String jsonResponse = null;
+
+        try {
+            jsonResponse = hacerRequestHTTP(url);
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "Problemas hacer el request HTTP", e);
+        }
+
+        List<Terrremoto> terremotos = extraigoDeJSON(jsonResponse);
+
+        return terremotos;
+    }
+
+
+    private static URL crearURL(String stringUrl) {
+        URL url = null;
+        try {
+            url = new URL(stringUrl);
+        } catch (MalformedURLException e) {
+            Log.e(LOG_TAG, "Error creado URL ", e);
+        }
+        return url;
+    }
+
+    /**
+     * Hago el request HTTP de una url dada y devuelve un String como respuesta.
+     */
+    private static String hacerRequestHTTP(URL url) throws IOException {
+        String jsonResponse = "";
+
+        // Si al URL es null termino
+        if (url == null) {
+            return jsonResponse;
+        }
+
+        HttpURLConnection urlConnection = null;
+        InputStream inputStream = null;
+        try {
+            urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setReadTimeout(10000 /* milisegundos */);
+            urlConnection.setConnectTimeout(15000 /* milisegundos */);
+            urlConnection.setRequestMethod("GET");
+            urlConnection.connect();
+
+            // Si obtengo respuesta correcta (200 OK),
+            // Entonces leo y parseo la respuesta
+            if (urlConnection.getResponseCode() == 200) {
+                inputStream = urlConnection.getInputStream();
+                jsonResponse = leerDeStream(inputStream);
+            } else {
+                Log.e(LOG_TAG, "Codigo de Error: " + urlConnection.getResponseCode());
+            }
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "Problemas buscando el JSON de terremotos.", e);
+        } finally {
+            if (urlConnection != null) {
+                urlConnection.disconnect();
+            }
+            if (inputStream != null) {
+                inputStream.close();
+            }
+        }
+        return jsonResponse;
+    }
+
+    /**
+     * Convierto el {@link InputStream} en un String que contiene toda la respuesta del JSON
+     */
+    private static String leerDeStream(InputStream inputStream) throws IOException {
+        StringBuilder output = new StringBuilder();
+        if (inputStream != null) {
+            InputStreamReader inputStreamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+            BufferedReader reader = new BufferedReader(inputStreamReader);
+            String line = reader.readLine();
+            while (line != null) {
+                output.append(line);
+                line = reader.readLine();
+            }
+        }
+        return output.toString();
+    }
+
+    private static List<Terrremoto> extraigoDeJSON(String terremotoJSON) {
+        // Si el JSON esta vacio devuelvo null
+        if (TextUtils.isEmpty(terremotoJSON)) {
+            return null;
+        }
+
+        List<Terrremoto> terrremotos = new ArrayList<>();
+
+        try {
+            JSONObject baseJsonResponse = new JSONObject(terremotoJSON);
+            JSONArray arrayTerremotos = baseJsonResponse.getJSONArray("features");
+
+            // Si hay resultados en el array de Features
+
+            for(int i=0; i < arrayTerremotos.length(); i++){
+
+                JSONObject terremotoActual = arrayTerremotos.getJSONObject(i);
+                JSONObject propiedades = terremotoActual.getJSONObject("properties");
+
+                double mag = propiedades.getDouble("mag");
+                String lugar = propiedades.getString("place");
+                long hora = propiedades.getLong("time");
+                String url = propiedades.getString("url");
+
+                Terrremoto terremotoNuevo = new Terrremoto(mag, lugar, hora, url);
+
+                terrremotos.add(terremotoNuevo);
+
+            }
+
+        } catch (JSONException e) {
+            Log.e(LOG_TAG, "Problemas parseando El JSON", e);
+        }
+        return terrremotos;
+    }
+
+
 
 }

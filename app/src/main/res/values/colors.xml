@@ -5,7 +5,7 @@
     <color name="colorAccent">#03DAC5</color>
 
 
-    <!-- Color for an earthquake with magnitud 0 y 2 -->
+    <!--  Color de circulo para magnitud entre 0 y 2 -->
     <color name="magnitud1">#4A7BA7</color>
 
     <!-- Color de circulo para magnitud entre 2 y 3 -->

@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -15,8 +16,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final String USGS_REQUEST_URL =
+            "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&orderby=time&minmag=6&limit=10";
+
+    //hago el adapter una variable global para poder usarlo en onPostExecute
+
+    private TerremotoAdapter miAdaptador;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,29 +33,27 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-
-/*        //Creo una lista falsa de Lugares de terremotos
-        ArrayList<Terrremoto> terremotos = new ArrayList<>();
-        terremotos.add(new Terrremoto("8.5", "San Francisco", "Feb 2 2016"));
-        terremotos.add(new Terrremoto("5.5", "Londres", "May 2 2016"));
-        terremotos.add(new Terrremoto("6.5", "Tokio", "Oct 2 2016"));
-        terremotos.add(new Terrremoto("7.5", "Madrid", "Dec 2 2018"));
-        terremotos.add(new Terrremoto("7.0", "Mexico City", "Ocy 2 2017"));
- */
-
         //reemplazo la carga manual por una que usar QueryUtils
 
-        ArrayList<Terrremoto> terremotos = QueryUtils.extractTerremotos();
+       // ArrayList<Terrremoto> terremotos = QueryUtils.extractTerremotos();
 
 
         // Encuentro la referencia de lista en el Layout
         ListView earthquakeListView =  findViewById(R.id.lista);
 
         // Creo un ArrayAdapter de terremotos
-        final TerremotoAdapter adapter = new TerremotoAdapter(this, terremotos);
+
+        // modifico el pedido para primero pedir un adaptador con una lista vacia que completo en la AsynTask
+        miAdaptador = new TerremotoAdapter(this, new ArrayList<Terrremoto>());
 
         // Seteo el adaptador
-        earthquakeListView.setAdapter(adapter);
+        earthquakeListView.setAdapter(miAdaptador);
+
+
+        //llamo Asyn Task
+
+        TerremotoAsynTask task = new TerremotoAsynTask();
+        task.execute(USGS_REQUEST_URL);
 
 
         //Creo un intent para llamar la pagina almacenada en la URL en cada item apretado
@@ -56,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 // Find the current earthquake that was clicked on
-                Terrremoto terremotoActual = adapter.getItem(position);
+                Terrremoto terremotoActual = miAdaptador.getItem(position);
 
                 // Convert the String URL into a URI object (to pass into the Intent constructor)
                 Uri earthquakeUri = Uri.parse(terremotoActual.getmURL());
@@ -70,9 +77,38 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-
-
     }
+
+    private class TerremotoAsynTask extends AsyncTask<String, Void, List<Terrremoto>>{
+
+        @Override
+        protected List<Terrremoto> doInBackground(String... urls) {
+
+            if (urls.length < 1 || urls[0] ==  null){
+
+                return null;
+
+
+            }
+
+            List<Terrremoto> resultado = QueryUtils.traerDataDeTerremoto(urls[0]);
+
+            return resultado;
+        }
+
+        @Override
+        protected void onPostExecute(List<Terrremoto> terrremotos) {
+            //limpio el adaptador de la data anterior
+            miAdaptador.clear();
+
+            if(terrremotos != null && !terrremotos.isEmpty()){
+
+                miAdaptador.addAll(terrremotos);
+            }
+
+        }
+    }
+
 
 
 
