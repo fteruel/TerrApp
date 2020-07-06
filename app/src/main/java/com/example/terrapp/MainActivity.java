@@ -2,7 +2,10 @@ package com.example.terrapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.LoaderManager;
+import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Intent;
+import android.content.Loader;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -10,6 +13,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -18,10 +22,15 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LoaderCallbacks<List<Terrremoto>> {
 
     private static final String USGS_REQUEST_URL =
             "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&orderby=time&minmag=6&limit=10";
+
+    //Asigno un valor al ID que voy a darle al Loader
+    private static final int TERREMOTO_LOADER_ID = 1;
+
+    private TextView view_vacio;
 
     //hago el adapter una variable global para poder usarlo en onPostExecute
 
@@ -33,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
+
         //reemplazo la carga manual por una que usar QueryUtils
 
        // ArrayList<Terrremoto> terremotos = QueryUtils.extractTerremotos();
@@ -40,6 +50,12 @@ public class MainActivity extends AppCompatActivity {
 
         // Encuentro la referencia de lista en el Layout
         ListView earthquakeListView =  findViewById(R.id.lista);
+
+        //Agrego un empty State
+
+        view_vacio = findViewById(R.id.view_vacio);
+        earthquakeListView.setEmptyView(view_vacio);
+
 
         // Creo un ArrayAdapter de terremotos
 
@@ -52,8 +68,12 @@ public class MainActivity extends AppCompatActivity {
 
         //llamo Asyn Task
 
-        TerremotoAsynTask task = new TerremotoAsynTask();
-        task.execute(USGS_REQUEST_URL);
+      //  TerremotoAsynTask task = new TerremotoAsynTask();
+       // task.execute(USGS_REQUEST_URL);
+
+        LoaderManager loaderManager = getLoaderManager();
+
+        loaderManager.initLoader(TERREMOTO_LOADER_ID, null, this);
 
 
         //Creo un intent para llamar la pagina almacenada en la URL en cada item apretado
@@ -77,9 +97,40 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+
+
     }
 
-    private class TerremotoAsynTask extends AsyncTask<String, Void, List<Terrremoto>>{
+    @Override
+    public Loader<List<Terrremoto>> onCreateLoader(int id, Bundle args) {
+        return new TerremotoLoader(this, USGS_REQUEST_URL);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<List<Terrremoto>> loader, List<Terrremoto> terrremotos) {
+
+        view_vacio.setText(R.string.not_found);
+
+        miAdaptador.clear();
+
+        if(terrremotos != null && !terrremotos.isEmpty()){
+
+            miAdaptador.addAll(terrremotos);
+
+        }
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<List<Terrremoto>> loader) {
+        miAdaptador.clear();
+    }
+
+
+
+
+
+    /*private class TerremotoAsynTask extends AsyncTask<String, Void, List<Terrremoto>>{
 
         @Override
         protected List<Terrremoto> doInBackground(String... urls) {
@@ -108,9 +159,7 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
-
-
-
+*/
 
 
 

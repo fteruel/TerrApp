@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">TerrApp</string>
     <string name="cerca_de">Cerca de</string>
+    <string name="not_found">No se Encontraron Terremotos</string>
 
 
 </resources>
