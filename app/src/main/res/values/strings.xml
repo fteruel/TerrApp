@@ -2,6 +2,26 @@
     <string name="app_name">TerrApp</string>
     <string name="cerca_de">Cerca de</string>
     <string name="not_found">No se Encontraron Terremotos</string>
+    <string name="titulo_preferencias">Preferencias</string>
+    <string name="item_menu">Item Menu</string>
 
+    <!-- Strings Para las preferencias de magnitud minima [CHAR LIMIT=30] -->
+    <string name="settings_min_magnitude_label">Magnitud Minima</string>
+    <string name="settings_min_magnitude_key" translatable="false">min_magnitude</string>
+    <string name="settings_min_magnitude_default" translatable="false">6</string>
+
+
+    <!-- Strings Para ordenado por [CHAR LIMIT=30] -->
+    <string name="settings_order_by_label">Ordenado Por</string>
+    <string name="settings_order_by_key" translatable="false">order_by</string>
+    <string name="settings_order_by_default" translatable="false">@string/settings_order_by_magnitude_value</string>
+
+
+    <string name="settings_order_by_magnitude_label">Magnitud</string>
+    <string name="settings_order_by_magnitude_value" translatable="false">magnitude</string>
+
+
+    <string name="settings_order_by_most_recent_label">Mas Recientes</string>
+    <string name="settings_order_by_most_recent_value" translatable="false">time</string>
 
 </resources>

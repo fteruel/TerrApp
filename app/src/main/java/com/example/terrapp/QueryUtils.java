@@ -95,6 +95,17 @@ public final class QueryUtils {
     }
 
     public static List<Terrremoto> traerDataDeTerremoto(String requestURL){
+
+
+        //Testeo
+/*        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }*/
+
+
+
         URL url = crearURL(requestURL);
 
         String jsonResponse = null;
